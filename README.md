@@ -95,3 +95,37 @@ void loop() {
 ```
 
 [Kompilujemy, wrzucamy](#BuidUpload) na urzadzenie. Po załadowaniu urządzenie się zrestartuje i program wystartuje. Po uruchomieniu programu możemy zaobserwować jednostajne mrugranie diody co 1s.
+
+
+### <a name="HelloWorld"></a>Hello World via RS232
+Z urzadzeń kompatybilnych z ludzkim interfejsem białkowym nasze urządzenie posiada jedynie diodę, możemy ją wykorzystać do informowania nas o stanie urzązenia. Jednak miganie diody dla początkującego programisty w świecie IoT to jednak trochę mało, teraz prześlijmy sobie tekst.
+
+Do tego celu wykorzystamy komunikację szeregową (Serial Port). Nasze [D1-Mini](https://wiki.wemos.cc/products:d1:d1_mini) jest wyposażone w konwerter USB na RS232 i inne potrzebne uklady, dlatego po podłączeniu w systemie pojawi nam się nowy port [COM](#Devices)
+
+Framework Arduino udestępnia nam narzędzie, klasę statyczną [Serial](https://www.arduino.cc/reference/en/language/functions/communication/serial/)
+
+``` c++
+#include <Arduino.h>                    // Arduino framework reference
+
+void setup() {
+  Serial.begin(9600);                   // setup port COM with bound 9600 bps
+  while (!Serial) ;                     // wait for serial port
+  Serial.print("Setup finished.");      // send text to COM
+}
+
+void loop() {
+  Serial.printf("Loop begin\n");        // send text to COM
+  delay(1000);                          // wait 1 s
+  Serial.print("Loop end\n");           // send text to COM
+}
+
+```
+<a name="Terminal"></a>[Kompilujemy, wrzucamy](#BuidUpload) na urządzenie i przełączamy się na terminal portu szeregowego
+
+![platformio_terminal](img/atom_platformio_terminal.png)
+
+Widzimy jakie informacje płyną do nas z urzadzenia. [PlatformIO](http://platformio.org/) do połączeń RS używa python'owego [Miniterm](http://pyserial.readthedocs.io/en/latest/tools.html#module-serial.tools.miniterm), do tego celu można użyc innych narzędzi takich jak (Putty)[http://www.putty.org/], (TerraTerm)[https://ttssh2.osdn.jp/index.html.en].
+
+Jeżeli używamy [VS Code](https://code.visualstudio.com/), pamiętajmy aby każdorazowo przed wrzucaniem nowej wersji oprogramowania rozłączyć teminal (Miniterm - CTRL+C), ponieważ nasz port komunikacyjny bedzie zajęty.
+
+![atom_platformio_faildportopen](img/vscode_platformio_faildportopen.png)
