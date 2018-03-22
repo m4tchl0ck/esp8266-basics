@@ -242,3 +242,71 @@ void wifiConnect(){
 ![atom_platformio_wifimac](img/atom_platformio_wifimac.png)
 
 Znając MAC adres naszej karty sieciowej możemy użyc [Postman](https://www.getpostman.com/) lub [curl][https://curl.haxx.se/] do zawołania adresu z [tresci zadania](https://gitlab.com/net-summit-2017/esp.task)
+
+## <a name="Http"></a>Call to another world
+
+Prosty endpoint do testów możemy utworzyć w [mockable.io](https://www.mockable.io/)
+
+![mockableio try](img/mockableio_try.png)
+
+Tworzymy mock serwisu rest'owego
+
+![mockableio rest](img/mockableio_rest.png)
+
+Konfigurujemy naszego mocka'a
+
+![mockableio config](img/mockableio_config.png)
+
+Możemy przetestować [Postman](https://www.getpostman.com/)'em
+
+![postman_call_hw](img/postman_call_hw.png)
+
+Mamy testowy endpoint i wiemy już jak podłączyć się do [WiFi](#Wifi), więc spróbujmy zawołać zewnętrzny server.
+
+Z pomocą przychodzi nam modul [ESP8266HTTPClient](https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266HTTPClient).
+``` c++
+#include <Arduino.h>                    // Arduino framework reference
+#include <ESP8266WiFi.h>                // WiFi module reference
+#include <ESP8266HTTPClient.h>          // HTTP Client module reference
+
+String getRequest(String endpoint);     // Method declaration
+
+void setup() {
+  Serial.begin(9600);                   // setup port COM with bound 9600 bps
+  while (!Serial) ;                     // wait for serial port
+  wifiConnect();                        // connect to WiFi
+}
+
+void loop() {
+  getRequest("http://demo4299438.mockable.io/hw");
+  delay(30000);
+}
+
+String getRequest(String endpoint){
+  HTTPClient http;
+  Serial.printf("[HTTP] begin %s\n", endpoint.c_str());
+  http.begin(endpoint);
+
+  Serial.printf("[HTTP] GET %s\n", endpoint.c_str());
+  int httpCode = http.GET();
+  // httpCode will be negative on error
+  if(httpCode > 0) {
+    // HTTP header has been send and Server response header has been handled
+    Serial.printf("[HTTP] GET code: %d\n", httpCode);
+
+    if(httpCode == HTTP_CODE_OK) {
+        String content = http.getString();
+        Serial.printf("[HTTP] GET content: %s\n", content.c_str());
+        return content;
+    }
+
+  } else {
+      Serial.printf("[HTTP] GET failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
+}
+
+```
+
+[Kompilujemy, wrzucamy](#BuidUpload) na urzadzenie i przelaczamy sie na [terminal portu szeregowego](#Terminal), może zobaczyć adres wolanego endpoint oraz infomacje zwrotne
+
+![atom_platformio_http_hw](img/atom_platformio_http_hw.png)
