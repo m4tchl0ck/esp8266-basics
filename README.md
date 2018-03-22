@@ -310,3 +310,56 @@ String getRequest(String endpoint){
 [Kompilujemy, wrzucamy](#BuidUpload) na urzadzenie i przelaczamy sie na [terminal portu szeregowego](#Terminal), może zobaczyć adres wolanego endpoint oraz infomacje zwrotne
 
 ![atom_platformio_http_hw](img/atom_platformio_http_hw.png)
+
+### HTTPS
+Aby nawiązać połączenie https, wystarczy zmienić adres na `https` i do metody `begin` przekazać dodatkowy parametr zawierający "odcisk palca", który odczytamy ze szczegółów certyfikatu ssl
+
+![ssl_fingerprint](img/ssl_fingerprint.png)
+
+``` c++
+#include <Arduino.h>                    // Arduino framework reference
+#include <ESP8266WiFi.h>                // WiFi module reference
+#include <ESP8266HTTPClient.h>          // HTTP Client module reference
+
+String getRequest(String endpoint);     // Method declaration
+
+void setup() {
+  Serial.begin(9600);                   // setup port COM with bound 9600 bps
+  while (!Serial) ;                     // wait for serial port
+  wifiConnect();                        // connect to WiFi
+}
+
+void loop() {
+  getRequest("https://demo4299438.mockable.io/hw");
+  delay(30000);
+}
+
+String getRequest(String endpoint){
+  HTTPClient http;
+  String fingerPrint = "7dd702a63ecb9eec2b97a3e581f15e723bea4e95";
+  Serial.printf("[HTTP] begin %s\n", endpoint.c_str());
+  http.begin(endpoint, fingerPrint);
+
+  Serial.printf("[HTTP] GET %s\n", endpoint.c_str());
+  int httpCode = http.GET();
+  // httpCode will be negative on error
+  if(httpCode > 0) {
+    // HTTP header has been send and Server response header has been handled
+    Serial.printf("[HTTP] GET code: %d\n", httpCode);
+
+    if(httpCode == HTTP_CODE_OK) {
+        String content = http.getString();
+        Serial.printf("[HTTP] GET content: %s\n", content.c_str());
+        return content;
+    }
+
+  } else {
+      Serial.printf("[HTTP] GET failed, error: %s\n", http.errorToString(httpCode).c_str());
+  }
+}
+
+```
+
+[Kompilujemy, wrzucamy](#BuidUpload) na urzadzenie i przelaczamy sie na [terminal portu szeregowego](#Terminal), może zobaczyć adres wolanego endpoint oraz infomacje zwrotne
+
+![atom_platformio_https_hw](img/atom_platformio_https_hw.png)
