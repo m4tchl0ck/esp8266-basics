@@ -72,3 +72,26 @@ void loop() {
 <a name="BuidUpload"></a>kompilujemy i wrzucamy na urządzenie, podczas uploadu dioda mruga szybko
 
 ![platformio_buildupload](img/atom_platformio_buildupload.png)
+
+### <a name="D1MiniLed"></a>Dioda na D1 Mini
+[D1-Mini](https://wiki.wemos.cc/products:d1:d1_mini) ma wbudowaną diode, spróbujmy pomrugać diodą.
+Aby ustawić sygnał wejściowy, musimy zainicjować odpowiedni pin jako OUTPUT. Stałe zawierające adresy pinow mozemy znaleźć [tutaj](https://wiki.wemos.cc/products:d1:d1_mini#pin). W naszym przypadku użyjemy `BUILTIN_LED` pod, którą kryje się `D4`, a finalnie [`GPIO2`](gpio.md) na [ESP8266](esp8266.md).
+Kolejne stałe udostępnione przez framework to `HIGH` i `LOW`, które wykorzystamy do ustawienia stanu wyjścia.
+
+``` c++
+#include <Arduino.h>                    // Arduino framework reference
+
+void setup() {
+  pinMode(BUILTIN_LED, OUTPUT);         // setup led pin as output
+}
+
+void loop() {
+  digitalWrite(BUILTIN_LED, HIGH);      // turn on led
+  delay(1000);                          // wait 1 s
+  digitalWrite(BUILTIN_LED, LOW);       // turn off led
+  delay(1000);                          // wait 1 s
+}
+
+```
+
+[Kompilujemy, wrzucamy](#BuidUpload) na urzadzenie. Po załadowaniu urządzenie się zrestartuje i program wystartuje. Po uruchomieniu programu możemy zaobserwować jednostajne mrugranie diody co 1s.
