@@ -363,3 +363,13 @@ String getRequest(String endpoint){
 [Kompilujemy, wrzucamy](#BuidUpload) na urzadzenie i przelaczamy sie na [terminal portu szeregowego](#Terminal), może zobaczyć adres wolanego endpoint oraz infomacje zwrotne
 
 ![atom_platformio_https_hw](img/atom_platformio_https_hw.png)
+
+
+## Podsumowanie
+Już wiemy jak wykonać podstawowe operacje z wykorzystaniem układu [ESP8266](esp8266.md).
+
+Teraz rozwiązanie zadania zaproponowanego przez Łukasza nie powinno sprawić wiekszego problem.
+
+W razie pytań wiecie, gdzie nas znaleźć :)
+
+
