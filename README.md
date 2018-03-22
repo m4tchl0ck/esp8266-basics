@@ -129,3 +129,32 @@ Widzimy jakie informacje płyną do nas z urzadzenia. [PlatformIO](http://platfo
 Jeżeli używamy [VS Code](https://code.visualstudio.com/), pamiętajmy aby każdorazowo przed wrzucaniem nowej wersji oprogramowania rozłączyć teminal (Miniterm - CTRL+C), ponieważ nasz port komunikacyjny bedzie zajęty.
 
 ![atom_platformio_faildportopen](img/vscode_platformio_faildportopen.png)
+
+## <a name="Button"></a>Button clicked
+[Shield](button-shield.md) który mamy w urządzeniu powoduje zwarcie portu D3 do masy, wiec po jego nacisnieciu powinnysmy na porcie D3 otrzynac stan niski (LOW)
+
+``` c++
+#include <Arduino.h>                    // Arduino framework reference
+
+void setup() {
+  pinMode(BUILTIN_LED, OUTPUT);         // setup led pin as output
+  Serial.begin(9600);                   // setup port COM with bound 9600 bps
+  while (!Serial) ;                     // wait for serial port
+  pinMode(D3, INPUT);                   // setup button pis as input
+}
+
+void loop() {
+  byte state = digitalRead(D3);         // read state of D3 pin
+  if (LOW == state) {
+    digitalWrite(BUILTIN_LED, HIGH);    // turn off led
+  } else {
+    digitalWrite(BUILTIN_LED, LOW);     // turn on led
+  }
+  Serial.println(state);                // sebd state to COM
+}
+
+```
+
+[Kompilujemy, wrzucamy](#BuidUpload) na urzadzenie i przelaczamy sie na [terminal portu szeregowego](#Terminal), gdzie zobaczymy stan przycisku 
+* 0 - wcisniety, dioda zgaszone
+* 1 - nie wcisniety, dioda zapalona
