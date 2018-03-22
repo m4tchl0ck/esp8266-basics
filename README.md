@@ -49,3 +49,26 @@ Instalacja jest szybka i bezbolesna :D
 - Kompilujemy projekt, tak na wszelki wypadek żeby dociągnąć wszystkie zalećności i upewnić się, że wszystko działa
 
     ![platformio_build](img/atom_platformio_build.png)
+
+### <a name="code"></a>setup i loop
+Zaglądamy do źródeł
+
+![platformio_main](img/atom_platformio_main.png)
+
+``` c++
+#include <Arduino.h>                    // Arduino framework reference
+
+void setup() {
+    // put your setup code here, to run once:
+}
+
+void loop() {
+    // put your main code here, to run repeatedly:
+}
+```
+* `setup()` - funkcja ta jest uruchamiana raz zaraz po starcie urządzenia
+* `loop()` funkcja uruchamiana w pętli, po zakończeniu jej działania następuje ponowne jej uruchomienie
+
+<a name="BuidUpload"></a>kompilujemy i wrzucamy na urządzenie, podczas uploadu dioda mruga szybko
+
+![platformio_buildupload](img/atom_platformio_buildupload.png)
